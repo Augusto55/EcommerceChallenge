@@ -1,3 +1,10 @@
+#Environment files
+application.properties
+
+#RSA keys
+**/app.key
+**/app.pub
+
 # Compiled class file
 *.class
 
