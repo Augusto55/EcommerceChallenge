@@ -1,10 +1,11 @@
 package br.com.compass.ecommercechallenge.model;
 
+import br.com.compass.ecommercechallenge.dto.LoginRequestDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -12,12 +13,14 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
+    //@JdbcTypeCode(SqlTypes.CHAR)
     UUID id;
     String name;
     String password;
@@ -31,4 +34,8 @@ public class User {
     @OneToOne
     @JoinColumn(name = "cart_id")
     Cart shoppingCart;
+
+    public boolean validateLoginCredentials(LoginRequestDto loginRequestDto, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(loginRequestDto.password(), this.password);
+    }
 }
