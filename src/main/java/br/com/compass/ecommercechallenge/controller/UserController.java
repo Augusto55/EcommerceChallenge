@@ -4,6 +4,7 @@ import br.com.compass.ecommercechallenge.dto.UserCreateDto;
 import br.com.compass.ecommercechallenge.model.User;
 import br.com.compass.ecommercechallenge.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +23,7 @@ public class UserController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<User> createUser(@RequestBody UserCreateDto user){
         userService.createUser(user);
         return ResponseEntity.ok().build();
