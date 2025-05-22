@@ -20,12 +20,12 @@ import java.util.UUID;
 @Table(name = "users")
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
-    //@JdbcTypeCode(SqlTypes.CHAR)
     UUID id;
     String name;
     String password;
     String email;
     Boolean active;
+    @Enumerated(EnumType.STRING)
     UserTypeEnum userType;
     Timestamp createdAt;
     Timestamp updatedAt;

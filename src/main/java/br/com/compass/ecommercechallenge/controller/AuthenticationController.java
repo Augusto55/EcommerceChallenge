@@ -40,11 +40,14 @@ public class AuthenticationController {
         var now = Instant.now();
         var expiresIn = 300L;
 
+        var scope = user.get().getUserType();
+
         var claims = JwtClaimsSet.builder()
                 .issuer("ecommerce-challenge")
                 .subject(user.get().getId().toString())
                 .expiresAt(now.plusSeconds(expiresIn))
                 .issuedAt(now)
+                .claim("scope", scope.label)
                 .build();
 
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

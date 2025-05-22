@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,26 +28,22 @@ public class UserService {
     }
 
 
-    public Iterable<User> listAllUsers() {
+    public List<User> listAllUsers() {
         return userRepository.findAll();
     }
 
     @Transactional
-    public void createUser(UserCreateDto user) {
-        try {
-            User newUser = User.builder()
-                    .name(user.name())
-                    .password(passwordEncoder.encode(user.password()))
-                    .email(user.email())
-                    .active(true)
-                    .userType(UserTypeEnum.DEFAULT)
-                    .createdAt(Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)))
-                    .build();
+    public User createUser(UserCreateDto user) {
+        User newUser = User.builder()
+                .name(user.name())
+                .password(passwordEncoder.encode(user.password()))
+                .email(user.email())
+                .active(true)
+                .userType(UserTypeEnum.DEFAULT)
+                .createdAt(Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)))
+                .build();
 
-            userRepository.save(newUser);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        return userRepository.save(newUser);
     }
 
     public Optional<User> findUserByEmail(String email) {
