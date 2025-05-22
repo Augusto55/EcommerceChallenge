@@ -1,0 +1,8 @@
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+spring.datasource.driver-class-name=
+spring.liquibase.change-log=
+
+jwt.public.key=classpath:app.pub
+jwt.private.key=classpath:app.key

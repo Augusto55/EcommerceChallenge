@@ -74,7 +74,7 @@
             <column name="password" type="VARCHAR(255)"/>
             <column name="email" type="VARCHAR(255)"/>
             <column name="active" type="BOOLEAN"/>
-            <column name="user_type" type="SMALLINT"/>
+            <column name="user_type" type="VARCHAR(20)"/>
             <column name="created_at" type="DATETIME"/>
             <column name="updated_at" type="DATETIME"/>
             <column name="cart_id" type="binary(16)"/>
