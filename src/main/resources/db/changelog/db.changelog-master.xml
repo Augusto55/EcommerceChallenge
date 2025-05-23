@@ -6,5 +6,6 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.25.xsd">
 
     <include file="/changes/01-create-tables.xml" relativeToChangelogFile="true"/>
+    <include file="/changes/02-create-password-reset-token-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

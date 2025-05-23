@@ -1,8 +1,9 @@
 package br.com.compass.ecommercechallenge.controller;
 
-import br.com.compass.ecommercechallenge.dto.LoginRequestDto;
-import br.com.compass.ecommercechallenge.dto.LoginResponseDto;
+import br.com.compass.ecommercechallenge.dto.*;
 import br.com.compass.ecommercechallenge.repository.UserRepository;
+import br.com.compass.ecommercechallenge.service.AuthenticationService;
+import br.com.compass.ecommercechallenge.service.EmailService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,47 +12,40 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 
 @RestController
+@RequestMapping("/auth")
 public class AuthenticationController {
 
-    private final JwtEncoder jwtEncoder;
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationService authenticationService;
+    private final EmailService emailService;
 
-    public AuthenticationController(JwtEncoder jwtEncoder, UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.jwtEncoder = jwtEncoder;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public AuthenticationController(AuthenticationService authenticationService, EmailService emailService) {
+        this.authenticationService = authenticationService;
+        this.emailService = emailService;
     }
-
-
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-        var user = userRepository.findByEmail(loginRequestDto.email());
-        if (user.isEmpty() || !user.get().validateLoginCredentials(loginRequestDto, passwordEncoder)){
-            throw new BadCredentialsException("Invalid email or password");
-        }
+        var response = authenticationService.authenticate(loginRequestDto);
+        return ResponseEntity.ok(response);
+    }
 
-        var now = Instant.now();
-        var expiresIn = 300L;
+    @PostMapping("/recover-password")
+    public ResponseEntity<?> recoverPassword(@RequestBody EmailRequestDto emailRequestDto) {
+        var token = authenticationService.generatePasswordResetToken(emailRequestDto.email());
+        emailService.sendPasswordResetEmail(emailRequestDto.email(), token.getToken().toString());
+        return ResponseEntity.ok(new ResponseMessageDto("Password reset email has been sent and should arrive within a few minutes."));
+    }
 
-        var scope = user.get().getUserType();
 
-        var claims = JwtClaimsSet.builder()
-                .issuer("ecommerce-challenge")
-                .subject(user.get().getId().toString())
-                .expiresAt(now.plusSeconds(expiresIn))
-                .issuedAt(now)
-                .claim("scope", scope.label)
-                .build();
-
-        var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-
-        return ResponseEntity.ok(new LoginResponseDto(jwtValue, expiresIn));
+    @PostMapping("/create-new-password")
+    public ResponseEntity createNewPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
+        authenticationService.validateResetPasswordToken(resetPasswordDto.token(), resetPasswordDto.password());
+        return ResponseEntity.ok(new ResponseMessageDto("Password successfully changed. You can now log in."));
     }
 }

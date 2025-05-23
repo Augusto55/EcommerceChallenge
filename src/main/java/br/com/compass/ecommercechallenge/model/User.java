@@ -3,8 +3,6 @@ package br.com.compass.ecommercechallenge.model;
 import br.com.compass.ecommercechallenge.dto.LoginRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Timestamp;
