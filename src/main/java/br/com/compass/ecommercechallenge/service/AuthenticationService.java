@@ -2,6 +2,7 @@ package br.com.compass.ecommercechallenge.service;
 
 import br.com.compass.ecommercechallenge.dto.LoginRequestDto;
 import br.com.compass.ecommercechallenge.dto.LoginResponseDto;
+import br.com.compass.ecommercechallenge.exception.NotFoundException;
 import br.com.compass.ecommercechallenge.model.PasswordResetToken;
 import br.com.compass.ecommercechallenge.repository.PasswordResetTokenRepository;
 import br.com.compass.ecommercechallenge.repository.UserRepository;
@@ -39,7 +40,7 @@ public class AuthenticationService {
     public LoginResponseDto authenticate(LoginRequestDto loginRequestDto){
         var user = userRepository.findByEmail(loginRequestDto.email());
         if (user.isEmpty() || !user.get().validateLoginCredentials(loginRequestDto, passwordEncoder)){
-            throw new BadCredentialsException("Invalid email or password");
+            throw new NotFoundException("User");
         }
 
         var now = Instant.now();
@@ -62,7 +63,7 @@ public class AuthenticationService {
     @Transactional
     public PasswordResetToken generatePasswordResetToken(String email) {
         var user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User"));
         var token = UUID.randomUUID();
 
         var resetToken = new PasswordResetToken(token, user,
