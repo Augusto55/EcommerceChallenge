@@ -6,3 +6,13 @@ spring.liquibase.change-log=
 
 jwt.public.key=classpath:app.pub
 jwt.private.key=classpath:app.key
+
+spring.mail.host=
+spring.mail.port=
+spring.mail.username=
+spring.mail.password=
+spring.mail.properties.mail.smtp.auth=
+spring.mail.properties.mail.smtp.starttls.enable=
+spring.mail.properties.mail.smtp.connectiontimeout=
+spring.mail.properties.mail.smtp.timeout=
+spring.mail.properties.mail.smtp.writetimeout=
