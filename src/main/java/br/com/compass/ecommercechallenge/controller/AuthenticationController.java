@@ -1,15 +1,11 @@
 package br.com.compass.ecommercechallenge.controller;
 
 import br.com.compass.ecommercechallenge.dto.*;
-import br.com.compass.ecommercechallenge.repository.UserRepository;
+
 import br.com.compass.ecommercechallenge.service.AuthenticationService;
 import br.com.compass.ecommercechallenge.service.EmailService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,13 +26,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestDto loginRequestDto) {
         var response = authenticationService.authenticate(loginRequestDto);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/recover-password")
-    public ResponseEntity<?> recoverPassword(@RequestBody EmailRequestDto emailRequestDto) {
+    public ResponseEntity<?> recoverPassword(@RequestBody @Valid EmailRequestDto emailRequestDto) {
         var token = authenticationService.generatePasswordResetToken(emailRequestDto.email());
         emailService.sendPasswordResetEmail(emailRequestDto.email(), token.getToken().toString());
         return ResponseEntity.ok(new ResponseMessageDto("Password reset email has been sent and should arrive within a few minutes."));
@@ -44,7 +40,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/create-new-password")
-    public ResponseEntity createNewPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
+    public ResponseEntity<?> createNewPassword(@RequestBody @Valid ResetPasswordDto resetPasswordDto) {
         authenticationService.validateResetPasswordToken(resetPasswordDto.token(), resetPasswordDto.password());
         return ResponseEntity.ok(new ResponseMessageDto("Password successfully changed. You can now log in."));
     }
