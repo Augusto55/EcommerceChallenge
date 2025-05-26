@@ -6,6 +6,7 @@ import br.com.compass.ecommercechallenge.dto.UserResponseDto;
 import br.com.compass.ecommercechallenge.mapper.UserMapper;
 import br.com.compass.ecommercechallenge.model.User;
 import br.com.compass.ecommercechallenge.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,7 +38,7 @@ public class UserController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('SCOPE_Administrator')")
-    public ResponseEntity<UserCreationSuccessDto> createUser(@RequestBody UserCreateDto user){
+    public ResponseEntity<UserCreationSuccessDto> createUser(@RequestBody @Valid UserCreateDto user){
         var createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new UserCreationSuccessDto("User successfully created", createdUser.getId().toString()));

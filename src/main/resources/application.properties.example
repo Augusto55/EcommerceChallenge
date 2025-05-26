@@ -16,3 +16,6 @@ spring.mail.properties.mail.smtp.starttls.enable=
 spring.mail.properties.mail.smtp.connectiontimeout=
 spring.mail.properties.mail.smtp.timeout=
 spring.mail.properties.mail.smtp.writetimeout=
+
+spring.web.locale=en_EN
+spring.web.locale-resolver=fixed

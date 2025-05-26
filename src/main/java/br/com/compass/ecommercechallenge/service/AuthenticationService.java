@@ -2,13 +2,14 @@ package br.com.compass.ecommercechallenge.service;
 
 import br.com.compass.ecommercechallenge.dto.LoginRequestDto;
 import br.com.compass.ecommercechallenge.dto.LoginResponseDto;
+import br.com.compass.ecommercechallenge.exception.InvalidCredentialsException;
+import br.com.compass.ecommercechallenge.exception.InvalidTokenException;
+import br.com.compass.ecommercechallenge.exception.NotFoundException;
+import br.com.compass.ecommercechallenge.exception.SamePasswordException;
 import br.com.compass.ecommercechallenge.model.PasswordResetToken;
 import br.com.compass.ecommercechallenge.repository.PasswordResetTokenRepository;
 import br.com.compass.ecommercechallenge.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -39,7 +40,7 @@ public class AuthenticationService {
     public LoginResponseDto authenticate(LoginRequestDto loginRequestDto){
         var user = userRepository.findByEmail(loginRequestDto.email());
         if (user.isEmpty() || !user.get().validateLoginCredentials(loginRequestDto, passwordEncoder)){
-            throw new BadCredentialsException("Invalid email or password");
+            throw new InvalidCredentialsException();
         }
 
         var now = Instant.now();
@@ -62,7 +63,7 @@ public class AuthenticationService {
     @Transactional
     public PasswordResetToken generatePasswordResetToken(String email) {
         var user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User"));
         var token = UUID.randomUUID();
 
         var resetToken = new PasswordResetToken(token, user,
@@ -73,17 +74,13 @@ public class AuthenticationService {
 
     @Transactional
     public void validateResetPasswordToken(String token, String newPassword) {
-        var passwordReset = passwordResetTokenRepository.findById(UUID.fromString(token)).orElseThrow(
-                () -> new RuntimeException("Invalid token.")
-        );
-
-        if (passwordReset.getExpiresAt().before(Timestamp.from(Instant.now()))) {
-            throw new RuntimeException("Token is expired.");
-        }
+        var passwordReset = passwordResetTokenRepository.findById(UUID.fromString(token))
+                .filter(pr -> pr.getExpiresAt().after(Timestamp.from(Instant.now())))
+                .orElseThrow(InvalidTokenException::new);
 
         var user = passwordReset.getUser();
         if (!passwordEncoder.matches(newPassword, user.getPassword())) {
-            throw new RuntimeException("Password cannot be the same.");
+            throw new SamePasswordException();
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);

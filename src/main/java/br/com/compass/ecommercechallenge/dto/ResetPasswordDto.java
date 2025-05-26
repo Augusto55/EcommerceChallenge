@@ -1,4 +1,8 @@
 package br.com.compass.ecommercechallenge.dto;
 
-public record ResetPasswordDto(String token, String password) {
+import jakarta.validation.constraints.Size;
+
+public record ResetPasswordDto(
+        String token,
+        @Size(min = 3) String password) {
 }
