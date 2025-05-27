@@ -1,5 +1,6 @@
 package br.com.compass.ecommercechallenge.mapper;
 
+import br.com.compass.ecommercechallenge.dto.user.UserAdminUpdateDto;
 import br.com.compass.ecommercechallenge.dto.user.UserResponseDto;
 import br.com.compass.ecommercechallenge.model.User;
 import org.mapstruct.Mapper;

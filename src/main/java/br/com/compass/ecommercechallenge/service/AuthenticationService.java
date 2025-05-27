@@ -44,7 +44,7 @@ public class AuthenticationService {
         }
 
         var now = Instant.now();
-        var expiresIn = 300L;
+        var expiresIn = 30000L;
 
         var scope = user.get().getUserType();
 

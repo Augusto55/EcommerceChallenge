@@ -1,5 +1,6 @@
 package br.com.compass.ecommercechallenge.controller;
 
+import br.com.compass.ecommercechallenge.dto.ResourceCreationSuccessDto;
 import br.com.compass.ecommercechallenge.dto.ResponseMessageDto;
 import br.com.compass.ecommercechallenge.dto.user.*;
 import br.com.compass.ecommercechallenge.mapper.UserMapper;
@@ -47,18 +48,18 @@ public class UserController {
     }
 
     @PostMapping("/default")
-    public ResponseEntity<UserCreationSuccessDto> createDefaultUser(@RequestBody @Valid UserCreateDto user){
+    public ResponseEntity<ResourceCreationSuccessDto> createDefaultUser(@RequestBody @Valid UserCreateDto user){
         var createdUser = userService.createUser(user, UserTypeEnum.DEFAULT);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new UserCreationSuccessDto("User successfully created", createdUser.getId().toString()));
+                .body(new ResourceCreationSuccessDto("User successfully created", createdUser.getId().toString()));
     }
 
     @PostMapping("/admin")
     @PreAuthorize("hasAuthority('SCOPE_Administrator')")
-    public ResponseEntity<UserCreationSuccessDto> createAdminUser(@RequestBody @Valid UserCreateDto user){
+    public ResponseEntity<ResourceCreationSuccessDto> createAdminUser(@RequestBody @Valid UserCreateDto user){
         var createdUser = userService.createUser(user, UserTypeEnum.ADMIN);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new UserCreationSuccessDto("User successfully created", createdUser.getId().toString()));
+                .body(new ResourceCreationSuccessDto("User successfully created", createdUser.getId().toString()));
     }
 
     @DeleteMapping("/{userId}")
