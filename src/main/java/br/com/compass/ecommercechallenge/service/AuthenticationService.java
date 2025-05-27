@@ -1,7 +1,7 @@
 package br.com.compass.ecommercechallenge.service;
 
-import br.com.compass.ecommercechallenge.dto.LoginRequestDto;
-import br.com.compass.ecommercechallenge.dto.LoginResponseDto;
+import br.com.compass.ecommercechallenge.dto.auth.LoginRequestDto;
+import br.com.compass.ecommercechallenge.dto.auth.LoginResponseDto;
 import br.com.compass.ecommercechallenge.exception.InvalidCredentialsException;
 import br.com.compass.ecommercechallenge.exception.InvalidTokenException;
 import br.com.compass.ecommercechallenge.exception.NotFoundException;
@@ -79,7 +79,7 @@ public class AuthenticationService {
                 .orElseThrow(InvalidTokenException::new);
 
         var user = passwordReset.getUser();
-        if (!passwordEncoder.matches(newPassword, user.getPassword())) {
+        if (passwordEncoder.matches(newPassword, user.getPassword())) {
             throw new SamePasswordException();
         }
         user.setPassword(passwordEncoder.encode(newPassword));

@@ -2,6 +2,10 @@ package br.com.compass.ecommercechallenge.controller;
 
 import br.com.compass.ecommercechallenge.dto.*;
 
+import br.com.compass.ecommercechallenge.dto.auth.EmailRequestDto;
+import br.com.compass.ecommercechallenge.dto.auth.LoginRequestDto;
+import br.com.compass.ecommercechallenge.dto.auth.LoginResponseDto;
+import br.com.compass.ecommercechallenge.dto.auth.ResetPasswordDto;
 import br.com.compass.ecommercechallenge.service.AuthenticationService;
 import br.com.compass.ecommercechallenge.service.EmailService;
 import jakarta.validation.Valid;
@@ -10,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.Instant;
 
 @RestController
 @RequestMapping("/auth")
