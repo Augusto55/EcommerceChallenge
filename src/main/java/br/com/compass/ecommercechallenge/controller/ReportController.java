@@ -17,9 +17,12 @@ public class ReportController {
         this.reportService = reportService;
     }
 
-//    @GetMapping
-//    @PreAuthorize("hasAuthority('SCOPE_Administrator')")
-//    public ResponseEntity<?> getReport() {}
+    @GetMapping
+    @PreAuthorize("hasAuthority('SCOPE_Administrator')")
+    public ResponseEntity<?> getSalesReport() {
+        var fullReport = reportService.getSalesReport();
+        return ResponseEntity.ok(fullReport);
+    }
 
     @GetMapping("/lowStock")
     @PreAuthorize("hasAuthority('SCOPE_Administrator')")
