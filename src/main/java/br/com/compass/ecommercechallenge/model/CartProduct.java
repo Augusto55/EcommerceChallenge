@@ -1,5 +1,6 @@
 package br.com.compass.ecommercechallenge.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class CartProduct {
     UUID id;
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonIgnore
     Cart cart;
     @ManyToOne
     @JoinColumn(name = "product_id")

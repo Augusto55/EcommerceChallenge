@@ -13,7 +13,6 @@
             <column name="cart_id" type="binary(16)"/>
             <column name="product_id" type="binary(16)"/>
             <column name="quantity" type="INT"/>
-            <column name="cart_product_id" type="binary(16)"/>
         </createTable>
     </changeSet>
     <changeSet id="1747686492181-2" author="augusto-mesquita">
@@ -32,7 +31,6 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_orders"/>
             </column>
             <column name="user_id" type="binary(16)"/>
-            <column name="order_timestamp" type="DATETIME"/>
             <column name="total_price" type="DECIMAL"/>
             <column name="created_at" type="DATETIME"/>
             <column name="updated_at" type="DATETIME"/>
@@ -48,7 +46,6 @@
             <column name="product_id" type="binary(16)"/>
             <column name="quantity" type="INT"/>
             <column name="unit_price" type="DECIMAL"/>
-            <column name="product_order_id" type="binary(16)"/>
         </createTable>
     </changeSet>
     <changeSet id="1747686492181-5" author="augusto-mesquita">
@@ -95,11 +92,6 @@
                                  constraintName="FK_CART_PRODUCT_ON_CART" referencedColumnNames="id"
                                  referencedTableName="carts"/>
     </changeSet>
-    <changeSet id="1747686492181-11" author="augusto-mesquita">
-        <addForeignKeyConstraint baseColumnNames="cart_product_id" baseTableName="cart_product"
-                                 constraintName="FK_CART_PRODUCT_ON_CART_PRODUCT" referencedColumnNames="id"
-                                 referencedTableName="carts"/>
-    </changeSet>
     <changeSet id="1747686492181-12" author="augusto-mesquita">
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="cart_product"
                                  constraintName="FK_CART_PRODUCT_ON_PRODUCT" referencedColumnNames="id"
@@ -122,11 +114,6 @@
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="product_order"
                                  constraintName="FK_PRODUCT_ORDER_ON_PRODUCT" referencedColumnNames="id"
                                  referencedTableName="products"/>
-    </changeSet>
-    <changeSet id="1747686492181-17" author="augusto-mesquita">
-        <addForeignKeyConstraint baseColumnNames="product_order_id" baseTableName="product_order"
-                                 constraintName="FK_PRODUCT_ORDER_ON_PRODUCT_ORDER" referencedColumnNames="id"
-                                 referencedTableName="orders"/>
     </changeSet>
     <changeSet id="1747686492181-18" author="augusto-mesquita">
         <addForeignKeyConstraint baseColumnNames="cart_id" baseTableName="users" constraintName="FK_USERS_ON_CART"

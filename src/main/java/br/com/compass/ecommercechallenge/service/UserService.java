@@ -7,8 +7,10 @@ import br.com.compass.ecommercechallenge.exception.InvalidUuidFormatException;
 import br.com.compass.ecommercechallenge.exception.NotFoundException;
 import br.com.compass.ecommercechallenge.exception.ResourceAlreadyExistsException;
 import br.com.compass.ecommercechallenge.exception.SamePasswordException;
+import br.com.compass.ecommercechallenge.model.Cart;
 import br.com.compass.ecommercechallenge.model.User;
 import br.com.compass.ecommercechallenge.model.UserTypeEnum;
+import br.com.compass.ecommercechallenge.repository.CartRepository;
 import br.com.compass.ecommercechallenge.repository.PasswordResetTokenRepository;
 import br.com.compass.ecommercechallenge.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -29,12 +31,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final CartRepository cartRepository;
 
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PasswordResetTokenRepository passwordResetTokenRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PasswordResetTokenRepository passwordResetTokenRepository, CartRepository cartRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.cartRepository = cartRepository;
     }
 
 
@@ -66,14 +70,19 @@ public class UserService {
             throw new ResourceAlreadyExistsException("User", "email" );
         }
 
+        var now = (Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
+
         User newUser = User.builder()
                 .name(user.name())
                 .password(passwordEncoder.encode(user.password()))
                 .email(user.email())
                 .active(true)
                 .userType(userType)
-                .createdAt(Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)))
+                .createdAt(now)
                 .build();
+
+        var cart = cartRepository.save(new Cart(newUser, now));
+        newUser.setShoppingCart(cart);
 
         return userRepository.save(newUser);
     }

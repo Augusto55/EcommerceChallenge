@@ -168,4 +168,70 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(restErrorMessage);
     }
 
+    @ExceptionHandler(ProductAssociatedWithOrderException.class)
+    public ResponseEntity<RestErrorMessage> handleProductAssociatedWithOrderException(ProductAssociatedWithOrderException ex, HttpServletRequest request) {
+        var errorStatus = HttpStatus.CONFLICT;
+        var restErrorMessage = RestErrorMessage
+                .builder()
+                .title(errorStatus.getReasonPhrase())
+                .status(errorStatus.value())
+                .detail(ex.getMessage())
+                .instance(request.getRequestURI())
+                .build();
+        return ResponseEntity
+                .status(errorStatus)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(restErrorMessage);
+    }
+
+    @ExceptionHandler(InactivateProductException.class)
+    public ResponseEntity<RestErrorMessage> handleProductInactivateProductException(InactivateProductException ex, HttpServletRequest request) {
+        var errorStatus = HttpStatus.CONFLICT;
+        var restErrorMessage = RestErrorMessage
+                .builder()
+                .title(errorStatus.getReasonPhrase())
+                .status(errorStatus.value())
+                .detail(ex.getMessage())
+                .instance(request.getRequestURI())
+                .build();
+        return ResponseEntity
+                .status(errorStatus)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(restErrorMessage);
+    }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<RestErrorMessage> handleInsufficientStockException(InsufficientStockException ex, HttpServletRequest request) {
+        var errorStatus = HttpStatus.CONFLICT;
+        var restErrorMessage = RestErrorMessage
+                .builder()
+                .title(errorStatus.getReasonPhrase())
+                .status(errorStatus.value())
+                .detail(ex.getMessage())
+                .instance(request.getRequestURI())
+                .build();
+        return ResponseEntity
+                .status(errorStatus)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(restErrorMessage);
+    }
+    @ExceptionHandler(EmptyCartException.class)
+    public ResponseEntity<RestErrorMessage> handleEmptyCartException(EmptyCartException ex, HttpServletRequest request) {
+        var errorStatus = HttpStatus.BAD_REQUEST;
+        var restErrorMessage = RestErrorMessage
+                .builder()
+                .title(errorStatus.getReasonPhrase())
+                .status(errorStatus.value())
+                .detail(ex.getMessage())
+                .instance(request.getRequestURI())
+                .build();
+        return ResponseEntity
+                .status(errorStatus)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(restErrorMessage);
+    }
+
+
+
+
 }

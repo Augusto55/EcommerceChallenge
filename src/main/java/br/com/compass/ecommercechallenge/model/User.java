@@ -29,8 +29,8 @@ public class User {
     Timestamp updatedAt;
     @OneToMany(mappedBy = "user")
     List<Order> orders;
-    @OneToOne
-    @JoinColumn(name = "cart_id")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JoinColumn(name = "id")
     Cart shoppingCart;
 
     public boolean validateLoginCredentials(LoginRequestDto loginRequestDto, PasswordEncoder passwordEncoder) {
