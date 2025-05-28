@@ -5,8 +5,8 @@ import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
 public record ProductCreateDto(
-        @NotBlank String name,
-        @NotBlank String description,
+        @NotBlank @Size(min = 3) String name,
+        @NotBlank @Size(min = 10) String description,
         @NotNull @DecimalMin(value="0.0") BigDecimal price,
         @PositiveOrZero Integer quantity,
         @NotNull Boolean active
