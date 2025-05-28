@@ -23,10 +23,9 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
-    Timestamp orderTimestamp;
     BigDecimal totalPrice;
     Timestamp createdAt;
     Timestamp updatedAt;
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProductOrder> itemList;
 }

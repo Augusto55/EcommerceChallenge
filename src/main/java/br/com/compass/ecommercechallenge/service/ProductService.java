@@ -3,8 +3,10 @@ package br.com.compass.ecommercechallenge.service;
 import br.com.compass.ecommercechallenge.dto.product.ProductCreateDto;
 import br.com.compass.ecommercechallenge.exception.InvalidUuidFormatException;
 import br.com.compass.ecommercechallenge.exception.NotFoundException;
+import br.com.compass.ecommercechallenge.exception.ProductAssociatedWithOrderException;
 import br.com.compass.ecommercechallenge.exception.ResourceAlreadyExistsException;
 import br.com.compass.ecommercechallenge.model.Product;
+import br.com.compass.ecommercechallenge.repository.ProductOrderRepository;
 import br.com.compass.ecommercechallenge.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -22,9 +24,11 @@ import java.util.UUID;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductOrderRepository productOrderRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ProductOrderRepository productOrderRepository) {
         this.productRepository = productRepository;
+        this.productOrderRepository = productOrderRepository;
     }
 
     public Page<Product> listAllProducts(int pageNumber, int pageSize) {
@@ -72,8 +76,8 @@ public class ProductService {
         if (product == null) {
             throw new NotFoundException("Product");
         }
-        //var productOder = productOrderRepository.findByProduct(productId)
-        //if(productOrder != null) { throw new Exception } --> Lógica de não permitir excluir caso já esteja incluso em pedido
+        var productOrder = productOrderRepository.findByProduct(product);
+        if(productOrder.isPresent()) { throw new ProductAssociatedWithOrderException(productId); }
 
         productRepository.delete(product);
     }
