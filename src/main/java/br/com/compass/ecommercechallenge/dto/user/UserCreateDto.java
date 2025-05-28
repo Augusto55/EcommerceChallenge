@@ -1,4 +1,4 @@
-package br.com.compass.ecommercechallenge.dto;
+package br.com.compass.ecommercechallenge.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

@@ -47,6 +47,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/default").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/recover-password").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/create-new-password").permitAll()
                         .anyRequest().authenticated())

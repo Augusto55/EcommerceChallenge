@@ -1,4 +1,4 @@
-package br.com.compass.ecommercechallenge.dto;
+package br.com.compass.ecommercechallenge.dto.user;
 
 import br.com.compass.ecommercechallenge.model.Cart;
 import br.com.compass.ecommercechallenge.model.Order;

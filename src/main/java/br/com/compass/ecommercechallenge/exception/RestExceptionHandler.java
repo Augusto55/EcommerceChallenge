@@ -136,4 +136,36 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON)
                 .body(validationErrorMessage);
     }
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<RestErrorMessage> handleResourceAlreadyExistsException(ResourceAlreadyExistsException ex, HttpServletRequest request) {
+        var errorStatus = HttpStatus.BAD_REQUEST;
+        var restErrorMessage = RestErrorMessage
+                .builder()
+                .title(errorStatus.getReasonPhrase())
+                .status(errorStatus.value())
+                .detail(ex.getMessage())
+                .instance(request.getRequestURI())
+                .build();
+        return ResponseEntity
+                .status(errorStatus)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(restErrorMessage);
+    }
+
+    @ExceptionHandler(InvalidUuidFormatException.class)
+    public ResponseEntity<RestErrorMessage> handleInvalidUuidFormat(InvalidUuidFormatException ex, HttpServletRequest request) {
+        var errorStatus = HttpStatus.BAD_REQUEST;
+        var restErrorMessage = RestErrorMessage
+                .builder()
+                .title(errorStatus.getReasonPhrase())
+                .status(errorStatus.value())
+                .detail(ex.getMessage())
+                .instance(request.getRequestURI())
+                .build();
+        return ResponseEntity
+                .status(errorStatus)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(restErrorMessage);
+    }
+
 }

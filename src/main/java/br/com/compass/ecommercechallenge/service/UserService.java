@@ -1,18 +1,26 @@
 package br.com.compass.ecommercechallenge.service;
 
-import br.com.compass.ecommercechallenge.dto.UserCreateDto;
+import br.com.compass.ecommercechallenge.dto.user.UserAdminUpdateDto;
+import br.com.compass.ecommercechallenge.dto.user.UserCreateDto;
+import br.com.compass.ecommercechallenge.dto.user.UserUpdateDto;
+import br.com.compass.ecommercechallenge.exception.InvalidUuidFormatException;
+import br.com.compass.ecommercechallenge.exception.NotFoundException;
+import br.com.compass.ecommercechallenge.exception.ResourceAlreadyExistsException;
+import br.com.compass.ecommercechallenge.exception.SamePasswordException;
 import br.com.compass.ecommercechallenge.model.User;
 import br.com.compass.ecommercechallenge.model.UserTypeEnum;
+import br.com.compass.ecommercechallenge.repository.PasswordResetTokenRepository;
 import br.com.compass.ecommercechallenge.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,34 +28,104 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PasswordResetTokenRepository passwordResetTokenRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
     }
 
 
-    public List<User> listAllUsers() {
-        return userRepository.findAll();
+    public Page<User> listAllUsers(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return userRepository.findAll(pageable);
+    }
+
+    public User findUserById(String userId) {
+        UUID userUuid;
+        try{
+            userUuid = UUID.fromString(userId);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidUuidFormatException();
+        }
+
+        return userRepository.findById(userUuid)
+                .orElseThrow(() -> new NotFoundException("User"));
+    }
+
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Transactional
-    public User createUser(UserCreateDto user) {
+    public User createUser(UserCreateDto user, UserTypeEnum userType) {
+        var userWithEmail = findUserByEmail(user.email());
+        if (userWithEmail.isPresent()) {
+            throw new ResourceAlreadyExistsException("User", "email" );
+        }
+
         User newUser = User.builder()
                 .name(user.name())
                 .password(passwordEncoder.encode(user.password()))
                 .email(user.email())
                 .active(true)
-                .userType(UserTypeEnum.DEFAULT)
+                .userType(userType)
                 .createdAt(Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)))
                 .build();
 
         return userRepository.save(newUser);
     }
 
-    public Optional<User> findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    @Transactional
+    public void deleteUserById(String userId) {
+        var user = findUserById(userId);
+        if (user == null) {
+            throw new NotFoundException("User");
+        }
+
+        passwordResetTokenRepository.deleteAllByUserId(user.getId());
+        userRepository.delete(user);
+    }
+
+    @Transactional
+    public void updateUser(String userId, UserUpdateDto userUpdateDto) {
+        var user = this.findUserById(userId);
+        if (passwordEncoder.matches(userUpdateDto.password(), user.getPassword())) {
+            throw new SamePasswordException();
+        }
+
+        if(userUpdateDto.name() != null){
+            user.setName(userUpdateDto.name());
+        }
+
+        if(userUpdateDto.password() != null){
+            user.setPassword(passwordEncoder.encode(userUpdateDto.password()));
+        }
+
+        user.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateAdminUser(String userId, UserAdminUpdateDto userAdminUpdateDto){
+        var user = this.findUserById(userId);
+
+        if(userAdminUpdateDto.name() != null){
+            user.setName(userAdminUpdateDto.name());
+        }
+
+        if(userAdminUpdateDto.email() != null){
+            user.setEmail(userAdminUpdateDto.email());
+        }
+
+        if(userAdminUpdateDto.isActive() != null){
+            user.setActive(userAdminUpdateDto.isActive());
+        }
+
+        user.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC)));
+        userRepository.save(user);
     }
 
 }
