@@ -17,7 +17,7 @@ public class ReportController {
         this.reportService = reportService;
     }
 
-    @GetMapping
+    @GetMapping("/salesReport")
     @PreAuthorize("hasAuthority('SCOPE_Administrator')")
     public ResponseEntity<?> getSalesReport() {
         var fullReport = reportService.getSalesReport();
