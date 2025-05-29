@@ -20,6 +20,11 @@ A comprehensive RESTful API built with Spring Boot for managing an e-commerce pl
 - **BCrypt** - Password encryption
 - **RSA Keys** - JWT token signing
 
+### Testing
+- **JUnit 5** - Testing framework
+- **Mockito** - Mocking framework
+- **Spring Boot Test** - Integration testing
+
 ### Additional Technologies
 - **Lombok** - Reduces boilerplate code
 - **MapStruct 1.6.3** - Object mapping
@@ -161,6 +166,17 @@ The application uses Liquibase for database migrations. The database schema will
 
 ## API Documentation
 
+The API documentation is available through Swagger UI when the application is running.
+
+### Swagger UI
+Access the interactive API documentation at: `http://localhost:8080/swagger-ui.html`
+
+The Swagger interface provides:
+- Complete endpoint documentation
+- Request/response examples
+- Interactive API testing
+- Authentication support
+
 ### Authentication Endpoints
 
 | Method | Endpoint | Description | Access |
@@ -231,10 +247,30 @@ The API uses JWT (JSON Web Tokens) for authentication. To access protected endpo
 
 ## Testing
 
-Run the test suite using:
+The project includes comprehensive unit tests for the service layer, organized by domain:
 
+### Service Layer Tests
+- **User Management Domain**: `UserServiceTest`, `AuthenticationServiceTest`
+- **Product Management Domain**: `ProductServiceTest`
+- **Shopping Domain**: `CartServiceTest`, `OrderServiceTest`
+- **Reporting Domain**: `ReportServiceTest`
+- **Communication Domain**: `EmailServiceTest`
+
+### Running Tests
+
+Run all tests:
 ```bash
 ./mvnw test
+```
+
+Run specific test class:
+```bash
+./mvnw test -Dtest=UserServiceTest
+```
+
+Run tests for a specific domain:
+```bash
+./mvnw test -Dtest="*ServiceTest"
 ```
 
 ##  Project Structure
