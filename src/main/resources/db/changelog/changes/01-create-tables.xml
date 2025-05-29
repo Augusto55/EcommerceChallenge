@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1747686492181-1" author="augusto-mesquita">
+        <createTable tableName="cart_product">
+            <column name="id" type="binary(16)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_cart_product"/>
+            </column>
+            <column name="cart_id" type="binary(16)"/>
+            <column name="product_id" type="binary(16)"/>
+            <column name="quantity" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1747686492181-2" author="augusto-mesquita">
+        <createTable tableName="carts">
+            <column name="id" type="binary(16)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_carts"/>
+            </column>
+            <column name="user_id" type="binary(16)"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1747686492181-3" author="augusto-mesquita">
+        <createTable tableName="orders">
+            <column name="id" type="binary(16)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_orders"/>
+            </column>
+            <column name="user_id" type="binary(16)"/>
+            <column name="total_price" type="DECIMAL"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="order_id" type="binary(16)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1747686492181-4" author="augusto-mesquita">
+        <createTable tableName="product_order">
+            <column name="id" type="binary(16)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_product_order"/>
+            </column>
+            <column name="order_id" type="binary(16)"/>
+            <column name="product_id" type="binary(16)"/>
+            <column name="quantity" type="INT"/>
+            <column name="unit_price" type="DECIMAL"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1747686492181-5" author="augusto-mesquita">
+        <createTable tableName="products">
+            <column name="id" type="binary(16)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_products"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="price" type="DECIMAL"/>
+            <column name="quantity" type="INT"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1747686492181-6" author="augusto-mesquita">
+        <createTable tableName="users">
+            <column name="id" type="binary(16)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="active" type="BOOLEAN"/>
+            <column name="user_type" type="VARCHAR(20)"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="cart_id" type="binary(16)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1747686492181-7" author="augusto-mesquita">
+        <addUniqueConstraint columnNames="user_id" constraintName="uc_carts_user" tableName="carts"/>
+    </changeSet>
+    <changeSet id="1747686492181-8" author="augusto-mesquita">
+        <addUniqueConstraint columnNames="cart_id" constraintName="uc_users_cart" tableName="users"/>
+    </changeSet>
+    <changeSet id="1747686492181-9" author="augusto-mesquita">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="carts" constraintName="FK_CARTS_ON_USER"
+                                 referencedColumnNames="id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="1747686492181-10" author="augusto-mesquita">
+        <addForeignKeyConstraint baseColumnNames="cart_id" baseTableName="cart_product"
+                                 constraintName="FK_CART_PRODUCT_ON_CART" referencedColumnNames="id"
+                                 referencedTableName="carts"/>
+    </changeSet>
+    <changeSet id="1747686492181-12" author="augusto-mesquita">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="cart_product"
+                                 constraintName="FK_CART_PRODUCT_ON_PRODUCT" referencedColumnNames="id"
+                                 referencedTableName="products"/>
+    </changeSet>
+    <changeSet id="1747686492181-13" author="augusto-mesquita">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="orders" constraintName="FK_ORDERS_ON_ORDER"
+                                 referencedColumnNames="id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="1747686492181-14" author="augusto-mesquita">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="orders" constraintName="FK_ORDERS_ON_USER"
+                                 referencedColumnNames="id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="1747686492181-15" author="augusto-mesquita">
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="product_order"
+                                 constraintName="FK_PRODUCT_ORDER_ON_ORDER" referencedColumnNames="id"
+                                 referencedTableName="orders"/>
+    </changeSet>
+    <changeSet id="1747686492181-16" author="augusto-mesquita">
+        <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="product_order"
+                                 constraintName="FK_PRODUCT_ORDER_ON_PRODUCT" referencedColumnNames="id"
+                                 referencedTableName="products"/>
+    </changeSet>
+    <changeSet id="1747686492181-18" author="augusto-mesquita">
+        <addForeignKeyConstraint baseColumnNames="cart_id" baseTableName="users" constraintName="FK_USERS_ON_CART"
+                                 referencedColumnNames="id" referencedTableName="carts"/>
+    </changeSet>
+</databaseChangeLog>
