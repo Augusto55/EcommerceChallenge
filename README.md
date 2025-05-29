@@ -2,12 +2,12 @@
 
 A comprehensive RESTful API built with Spring Boot for managing an e-commerce platform. This application provides complete functionality for user management, product catalog, shopping cart, order processing, and administrative reporting.
 
-## 🚀 Technologies
+## Technologies
 
 ### Core Framework
-- **Spring Boot 3.4.5** - Main application framework
-- **Java 21** - Programming language
-- **Maven** - Dependency management and build tool
+- **Spring Boot 3.4.5**
+- **Java 21**
+- **Maven**
 
 ### Database & Persistence
 - **MySQL 8.0** - Primary database
@@ -28,7 +28,7 @@ A comprehensive RESTful API built with Spring Boot for managing an e-commerce pl
 - **Spring Boot DevTools** - Development utilities
 - **Docker Compose** - Container orchestration
 
-## 📋 Features
+## Features
 
 ### User Management
 - User registration (Default and Admin users)
@@ -60,14 +60,14 @@ A comprehensive RESTful API built with Spring Boot for managing an e-commerce pl
 - Low stock alerts
 - Most sold products analysis
 - Top buyers identification
-- User management (Admin only)
+- User management
 
 ### Email Services
 - Password reset emails
 - Asynchronous email processing
 - SMTP integration with Mailtrap
 
-## 🛠️ Prerequisites
+## 🛠Prerequisites
 
 Before running this application, ensure you have the following installed:
 
@@ -76,7 +76,7 @@ Before running this application, ensure you have the following installed:
 - **Docker & Docker Compose** (for database)
 - **Git**
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Clone the Repository
 
@@ -159,7 +159,7 @@ The application will start on `http://localhost:8080`
 
 The application uses Liquibase for database migrations. The database schema will be automatically created and updated when the application starts.
 
-## 📚 API Documentation
+## API Documentation
 
 ### Authentication Endpoints
 
@@ -216,7 +216,7 @@ The application uses Liquibase for database migrations. The database schema will
 | GET | `/admin/reports/mostSold` | Most sold products | Admin |
 | GET | `/admin/reports/topBuyers` | Top buyers report | Admin |
 
-## 🔐 Authentication
+## Authentication
 
 The API uses JWT (JSON Web Tokens) for authentication. To access protected endpoints:
 
@@ -229,7 +229,7 @@ The API uses JWT (JSON Web Tokens) for authentication. To access protected endpo
 - **Default**: Regular users who can manage their profile, cart, and place orders
 - **Administrator**: Full access to all endpoints including user management, product management, and reports
 
-## 🧪 Testing
+## Testing
 
 Run the test suite using:
 
@@ -237,7 +237,7 @@ Run the test suite using:
 ./mvnw test
 ```
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 src/
@@ -260,7 +260,7 @@ src/
 └── test/                   # Test classes
 ```
 
-## 🐳 Docker Support
+## Docker Support
 
 The project includes Docker Compose configuration for easy database setup. The MySQL container is configured with:
 
@@ -268,14 +268,6 @@ The project includes Docker Compose configuration for easy database setup. The M
 - **Container Name**: ecommerce
 - **Port Mapping**: 3308:3306
 - **Persistent Volume**: mysql-data
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## License
 
