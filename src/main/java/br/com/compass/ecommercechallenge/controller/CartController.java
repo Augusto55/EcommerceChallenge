@@ -1,11 +1,14 @@
 package br.com.compass.ecommercechallenge.controller;
 
+import br.com.compass.ecommercechallenge.config.SecurityConfig;
 import br.com.compass.ecommercechallenge.dto.ResourceCreationSuccessDto;
 import br.com.compass.ecommercechallenge.dto.ResponseMessageDto;
 import br.com.compass.ecommercechallenge.dto.cart.AddProductDto;
 import br.com.compass.ecommercechallenge.dto.cart.CartResponseDto;
 import br.com.compass.ecommercechallenge.dto.cart.ChangeProductQuantityDto;
 import br.com.compass.ecommercechallenge.service.CartService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cart")
+@Tag(name = "Cart", description = "Requests adding, removing and editing Products in the Shopping Cart")
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class CartController {
 
     private final CartService cartService;

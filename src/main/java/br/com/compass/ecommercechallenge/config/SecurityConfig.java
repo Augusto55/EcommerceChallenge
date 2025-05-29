@@ -4,6 +4,8 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +32,10 @@ import java.security.interfaces.RSAPublicKey;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@SecurityScheme(name= SecurityConfig.SECURITY, type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
 public class SecurityConfig {
+
+    public static final String SECURITY = "bearerAuth";
 
     @Value("${jwt.public.key}")
     private RSAPublicKey publicKey;
@@ -50,6 +55,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/users/default").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/recover-password").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/create-new-password").permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())

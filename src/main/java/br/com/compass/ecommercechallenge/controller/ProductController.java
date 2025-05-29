@@ -1,5 +1,6 @@
 package br.com.compass.ecommercechallenge.controller;
 
+import br.com.compass.ecommercechallenge.config.SecurityConfig;
 import br.com.compass.ecommercechallenge.dto.ResponseMessageDto;
 import br.com.compass.ecommercechallenge.dto.product.ProductActiveDto;
 import br.com.compass.ecommercechallenge.dto.product.ProductCreateDto;
@@ -7,6 +8,8 @@ import br.com.compass.ecommercechallenge.dto.product.ProductResponseDto;
 import br.com.compass.ecommercechallenge.dto.ResourceCreationSuccessDto;
 import br.com.compass.ecommercechallenge.mapper.ProductMapper;
 import br.com.compass.ecommercechallenge.service.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/products")
+@Tag(name = "Product", description = "Requests related to managing product information")
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class ProductController {
 
     private final ProductService productService;

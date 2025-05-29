@@ -8,6 +8,7 @@ import br.com.compass.ecommercechallenge.dto.auth.LoginResponseDto;
 import br.com.compass.ecommercechallenge.dto.auth.ResetPasswordDto;
 import br.com.compass.ecommercechallenge.service.AuthenticationService;
 import br.com.compass.ecommercechallenge.service.EmailService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Authentication", description = "Requests related to login, password and authentication")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
