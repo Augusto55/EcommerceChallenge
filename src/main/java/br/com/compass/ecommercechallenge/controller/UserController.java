@@ -1,11 +1,14 @@
 package br.com.compass.ecommercechallenge.controller;
 
+import br.com.compass.ecommercechallenge.config.SecurityConfig;
 import br.com.compass.ecommercechallenge.dto.ResourceCreationSuccessDto;
 import br.com.compass.ecommercechallenge.dto.ResponseMessageDto;
 import br.com.compass.ecommercechallenge.dto.user.*;
 import br.com.compass.ecommercechallenge.mapper.UserMapper;
 import br.com.compass.ecommercechallenge.model.UserTypeEnum;
 import br.com.compass.ecommercechallenge.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "User", description = "Requests related to managing user information")
+@SecurityRequirement(name = SecurityConfig.SECURITY)
 public class UserController {
 
     private final UserMapper userMapper;
