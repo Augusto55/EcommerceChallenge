@@ -3,10 +3,7 @@ package br.com.compass.ecommercechallenge.service;
 import br.com.compass.ecommercechallenge.dto.user.UserAdminUpdateDto;
 import br.com.compass.ecommercechallenge.dto.user.UserCreateDto;
 import br.com.compass.ecommercechallenge.dto.user.UserUpdateDto;
-import br.com.compass.ecommercechallenge.exception.InvalidUuidFormatException;
-import br.com.compass.ecommercechallenge.exception.NotFoundException;
-import br.com.compass.ecommercechallenge.exception.ResourceAlreadyExistsException;
-import br.com.compass.ecommercechallenge.exception.SamePasswordException;
+import br.com.compass.ecommercechallenge.exception.*;
 import br.com.compass.ecommercechallenge.model.Cart;
 import br.com.compass.ecommercechallenge.model.User;
 import br.com.compass.ecommercechallenge.model.UserTypeEnum;
@@ -20,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.net.UnknownServiceException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -93,6 +91,9 @@ public class UserService {
         if (user == null) {
             throw new NotFoundException("User");
         }
+        if(!user.getOrders().isEmpty()) {
+            throw new UserWithOrdersAssociatedException();
+        }
 
         passwordResetTokenRepository.deleteAllByUserId(user.getId());
         userRepository.delete(user);
@@ -101,7 +102,7 @@ public class UserService {
     @Transactional
     public void updateUser(String userId, UserUpdateDto userUpdateDto) {
         var user = this.findUserById(userId);
-        if (passwordEncoder.matches(userUpdateDto.password(), user.getPassword())) {
+        if (userUpdateDto.password() != null && passwordEncoder.matches(userUpdateDto.password(), user.getPassword())) {
             throw new SamePasswordException();
         }
 

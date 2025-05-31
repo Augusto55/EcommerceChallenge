@@ -1,6 +1,7 @@
 package br.com.compass.ecommercechallenge.model;
 
 import br.com.compass.ecommercechallenge.dto.auth.LoginRequestDto;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +29,7 @@ public class User {
     Timestamp createdAt;
     Timestamp updatedAt;
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     List<Order> orders;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @JoinColumn(name = "id")

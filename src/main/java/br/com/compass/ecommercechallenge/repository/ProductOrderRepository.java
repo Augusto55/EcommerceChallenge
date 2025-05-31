@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ProductOrderRepository extends JpaRepository<ProductOrder, UUID> {
-    Optional<ProductOrder> findByProduct(Product product);
+    Optional<List<ProductOrder>> findByProduct(Product product);
 
     @Query("""
     SELECT new br.com.compass.ecommercechallenge.dto.product.ProductSalesReportDto(

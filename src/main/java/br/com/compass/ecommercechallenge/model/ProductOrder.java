@@ -1,5 +1,6 @@
 package br.com.compass.ecommercechallenge.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class ProductOrder {
     UUID id;
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonBackReference
     Order order;
     @ManyToOne
     @JoinColumn(name = "product_id")

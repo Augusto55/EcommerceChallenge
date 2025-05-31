@@ -13,7 +13,5 @@ public record UserResponseDto(UUID id, String name, String email,
                               UserTypeEnum userType,
                               Timestamp createdAt,
                               Timestamp updatedAt,
-                              List<Order> orders,
-                              Cart shoppingCart
-                              ) {
+                              List<Order> orders) {
 }

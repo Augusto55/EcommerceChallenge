@@ -1,5 +1,7 @@
 package br.com.compass.ecommercechallenge.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,10 +24,12 @@ public class Order {
     UUID id;
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     User user;
     BigDecimal totalPrice;
     Timestamp createdAt;
     Timestamp updatedAt;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     List<ProductOrder> itemList;
 }

@@ -231,7 +231,21 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(restErrorMessage);
     }
 
-
+    @ExceptionHandler(UserWithOrdersAssociatedException.class)
+    public ResponseEntity<RestErrorMessage> handleUserWithOrdersAssociatedException(UserWithOrdersAssociatedException ex, HttpServletRequest request) {
+        var errorStatus = HttpStatus.CONFLICT;
+        var restErrorMessage = RestErrorMessage
+                .builder()
+                .title(errorStatus.getReasonPhrase())
+                .status(errorStatus.value())
+                .detail(ex.getMessage())
+                .instance(request.getRequestURI())
+                .build();
+        return ResponseEntity
+                .status(errorStatus)
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(restErrorMessage);
+    }
 
 
 }
