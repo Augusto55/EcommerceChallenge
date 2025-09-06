@@ -1,0 +1,41 @@
+package br.com.ecommercechallenge.model;
+
+import br.com.ecommercechallenge.dto.auth.LoginRequestDto;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.UUID;
+
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "users")
+public class User {
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
+    UUID id;
+    String name;
+    String password;
+    String email;
+    Boolean active;
+    @Enumerated(EnumType.STRING)
+    UserTypeEnum userType;
+    Timestamp createdAt;
+    Timestamp updatedAt;
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    List<Order> orders;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JoinColumn(name = "id")
+    Cart shoppingCart;
+
+    public boolean validateLoginCredentials(LoginRequestDto loginRequestDto, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(loginRequestDto.password(), this.password);
+    }
+}

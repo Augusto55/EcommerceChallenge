@@ -278,7 +278,7 @@ Run tests for a specific domain:
 ```
 src/
 ├── main/
-│   ├── java/br/com/compass/ecommercechallenge/
+│   ├── java/br/com/ecommercechallenge/
 │   │   ├── config/          # Security and application configuration
 │   │   ├── controller/      # REST controllers
 │   │   ├── dto/            # Data Transfer Objects
